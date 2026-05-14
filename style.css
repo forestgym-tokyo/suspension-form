@@ -6,10 +6,7 @@
 
 body{
   margin:0;
-  font-family:
-  "Hiragino Sans",
-  "Noto Sans JP",
-  sans-serif;
+  font-family:"Hiragino Sans","Noto Sans JP",sans-serif;
   background:#000;
   color:#fff;
 }
@@ -17,8 +14,7 @@ body{
 .bg{
   position:fixed;
   inset:0;
-  background:
-  radial-gradient(circle at top,#0f2d17 0%,#000 60%);
+  background:radial-gradient(circle at top,#0f2d17 0%,#000 60%);
   z-index:-1;
 }
 
@@ -26,70 +22,87 @@ body{
   width:100%;
   max-width:980px;
   margin:auto;
-  padding:24px;
+  padding:22px;
 }
 
 .header{
-  text-align:center;
-  margin-bottom:32px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:20px;
+  text-align:left;
 }
 
 .logo{
-  width:260px;
-  max-width:80%;
-  margin-bottom:20px;
+  width:78px;
+  height:auto;
+  margin:0;
+  object-fit:contain;
+}
+
+.header-text{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
 }
 
 h1{
   margin:0;
-  font-size:52px;
+  font-size:24px;
   font-weight:700;
+  line-height:1.2;
 }
 
 .sub{
   color:#52d66f;
-  letter-spacing:3px;
-  margin-top:8px;
+  letter-spacing:1.8px;
+  margin:4px 0 0;
+  font-size:11px;
+  line-height:1.3;
 }
 
 .card{
   background:rgba(0,0,0,.7);
   border:1px solid rgba(82,214,111,.35);
-  border-radius:22px;
-  padding:28px;
-  margin-bottom:24px;
+  border-radius:18px;
+  padding:22px;
+  margin-bottom:20px;
   backdrop-filter:blur(12px);
 }
 
 .notice-title{
-  font-size:24px;
+  font-size:16px;
   line-height:1.7;
+  font-weight:600;
 }
 
 .notice-sub{
-  margin-top:12px;
+  margin-top:8px;
   color:#ddd;
-  font-size:20px;
+  font-size:14px;
+  line-height:1.6;
 }
 
 .example{
-  margin-top:18px;
+  margin-top:10px;
   color:#63ff84;
-  font-size:20px;
-  line-height:1.8;
+  font-size:14px;
+  line-height:1.6;
 }
 
 h2{
   color:#63ff84;
   margin-top:0;
-  margin-bottom:24px;
-  font-size:34px;
+  margin-bottom:18px;
+  font-size:20px;
+  font-weight:700;
+  line-height:1.4;
 }
 
 .form-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:22px;
+  gap:18px;
 }
 
 .field{
@@ -98,20 +111,22 @@ h2{
 }
 
 .field label{
-  margin-bottom:10px;
-  font-size:18px;
+  margin-bottom:8px;
+  font-size:14px;
+  line-height:1.5;
+  font-weight:600;
 }
 
 input,
 select{
   width:100%;
-  height:66px;
+  height:54px;
   background:#050505;
   border:1px solid #2f7d43;
-  border-radius:14px;
+  border-radius:12px;
   color:#fff;
-  padding:0 18px;
-  font-size:22px;
+  padding:0 16px;
+  font-size:16px;
 }
 
 input:focus,
@@ -121,14 +136,22 @@ select:focus{
   box-shadow:0 0 12px rgba(99,255,132,.35);
 }
 
+.end-date{
+  margin-top:10px;
+  color:#63ff84;
+  font-size:14px;
+  line-height:1.7;
+  font-weight:600;
+}
+
 .price-box{
-  margin-top:30px;
+  margin-top:22px;
   border:1px solid rgba(82,214,111,.3);
-  border-radius:18px;
-  padding:24px;
+  border-radius:16px;
+  padding:18px;
   display:flex;
   justify-content:space-between;
-  gap:24px;
+  gap:18px;
 }
 
 .price-left{
@@ -137,19 +160,22 @@ select:focus{
 }
 
 .price-label{
-  font-size:22px;
-  margin-bottom:12px;
+  font-size:15px;
+  margin-bottom:8px;
+  line-height:1.4;
 }
 
 .price{
-  font-size:72px;
+  font-size:36px;
   color:#63ff84;
   font-weight:700;
+  line-height:1.1;
 }
 
 .tax{
-  margin-top:10px;
+  margin-top:6px;
   color:#bbb;
+  font-size:12px;
 }
 
 .price-right{
@@ -157,39 +183,53 @@ select:focus{
   display:flex;
   flex-direction:column;
   justify-content:center;
-  gap:16px;
-  font-size:22px;
+  gap:8px;
+  font-size:14px;
+  line-height:1.6;
+}
+
+.price-row{
+  font-size:14px;
+  line-height:1.6;
 }
 
 .notes{
   margin:0;
-  padding-left:22px;
-  line-height:2;
+  padding-left:20px;
+  line-height:1.9;
   color:#ddd;
-  font-size:18px;
+  font-size:14px;
+}
+
+.notes li{
+  margin-bottom:10px;
 }
 
 .agree-wrap{
-  margin-top:28px;
+  margin-top:22px;
   display:flex;
   align-items:center;
-  gap:12px;
-  font-size:22px;
+  gap:10px;
+  font-size:15px;
+  line-height:1.5;
 }
 
 .agree-wrap input{
-  width:26px;
-  height:26px;
+  width:20px;
+  height:20px;
 }
 
 .submit-btn{
   width:100%;
-  height:86px;
+  max-width:320px;
+  display:block;
+  margin:28px auto 0;
+  height:56px;
   border:none;
-  border-radius:18px;
+  border-radius:14px;
   background:linear-gradient(90deg,#58e16f,#7dff8f);
   color:#fff;
-  font-size:32px;
+  font-size:18px;
   font-weight:700;
   cursor:pointer;
   transition:.2s;
@@ -197,17 +237,29 @@ select:focus{
 
 .submit-btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 0 24px rgba(99,255,132,.35);
+  box-shadow:0 0 20px rgba(99,255,132,.3);
 }
 
 @media(max-width:768px){
 
   .container{
-    padding:16px;
+    padding:14px;
+  }
+
+  .logo{
+    width:68px;
   }
 
   h1{
-    font-size:42px;
+    font-size:21px;
+  }
+
+  .sub{
+    font-size:10px;
+  }
+
+  .card{
+    padding:18px;
   }
 
   .form-grid{
@@ -219,12 +271,12 @@ select:focus{
   }
 
   .price{
-    font-size:58px;
+    font-size:30px;
   }
 
   .submit-btn{
-    font-size:26px;
-    height:76px;
+    height:54px;
+    font-size:17px;
   }
 
 }

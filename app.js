@@ -77,7 +77,7 @@ function updatePrice(){
 
   if(endDateText){
     endDateText.innerHTML =
-    `休会最終日：${end.getFullYear()}年${end.getMonth()+1}月${end.getDate()}日`;
+    `休会最終日 / END DATE<br>${end.getFullYear()}年${end.getMonth()+1}月${end.getDate()}日`;
   }
 
 }

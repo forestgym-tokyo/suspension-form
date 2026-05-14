@@ -1,1 +1,103 @@
 
+// app.js
+
+const PRICE_PER_MONTH = 550;
+
+const startMonthInput = document.getElementById("startMonth");
+const monthsSelect = document.getElementById("months");
+const priceEl = document.getElementById("price");
+const priceDetail = document.getElementById("priceDetail");
+const exampleText = document.getElementById("exampleText");
+
+function calcStartMonth(){
+
+  const now = new Date();
+
+  const y = now.getFullYear();
+  const m = now.getMonth();
+
+  const deadline = new Date(y,m,9,20,0,0);
+
+  let start;
+
+  if(now <= deadline){
+    start = new Date(y,m+1,1);
+  }else{
+    start = new Date(y,m+2,1);
+  }
+
+  return start;
+}
+
+function formatMonth(d){
+
+  return `${d.getFullYear()}年${d.getMonth()+1}月1日から開始`;
+
+}
+
+function updateStartMonth(){
+
+  const start = calcStartMonth();
+
+  startMonthInput.value = formatMonth(start);
+
+  const now = new Date();
+
+  const y = now.getFullYear();
+  const m = now.getMonth()+1;
+
+  exampleText.innerHTML = `
+  例）${m}月9日20:00までの送信 → ${start.getMonth()+1}月1日から開始
+  `;
+}
+
+function updatePrice(){
+
+  const months = Number(monthsSelect.value);
+
+  const total = months * PRICE_PER_MONTH;
+
+  priceEl.textContent =
+  total.toLocaleString() + "円";
+
+  priceDetail.textContent =
+  `${months}か月 × 550円（税込）`;
+
+}
+
+monthsSelect.addEventListener("change",updatePrice);
+
+updateStartMonth();
+updatePrice();
+
+document
+.getElementById("submitBtn")
+.addEventListener("click",()=>{
+
+  const memberNo =
+  document.getElementById("memberNo").value;
+
+  const name =
+  document.getElementById("name").value;
+
+  const email =
+  document.getElementById("email").value;
+
+  const agree =
+  document.getElementById("agree").checked;
+
+  if(!memberNo || !name || !email){
+
+    alert("必須項目を入力してください");
+    return;
+  }
+
+  if(!agree){
+
+    alert("同意チェックをしてください");
+    return;
+  }
+
+  alert("送信処理を実装してください");
+
+});

@@ -43,11 +43,16 @@ function updateStartMonth(){
 
   const now = new Date();
 
-  const y = now.getFullYear();
-  const m = now.getMonth()+1;
+  const currentMonth = now.getMonth() + 1;
+
+  let nextMonth = currentMonth + 1;
+
+  if(nextMonth > 12){
+    nextMonth = 1;
+  }
 
   exampleText.innerHTML = `
-  例）${m}月9日20:00までの送信 → ${start.getMonth()+1}月1日から開始
+  例）${currentMonth}月9日20:00までの送信 → ${nextMonth}月1日からの開始です。
   `;
 }
 

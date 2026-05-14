@@ -5,10 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>休会届フォーム | The Forest Gym</title>
-
-  <link rel="stylesheet" href="style.css?v=1">
-
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
+
 <body>
 
 <div class="bg"></div>
@@ -17,8 +16,10 @@
 
   <header class="header">
     <img src="logo.png" class="logo">
-    <h1>休会届フォーム</h1>
-    <p class="sub">MEMBERSHIP SUSPENSION FORM</p>
+    <div class="header-text">
+      <h1>休会届フォーム</h1>
+      <p class="sub">MEMBERSHIP SUSPENSION FORM</p>
+    </div>
   </header>
 
   <section class="card notice-card">
@@ -34,44 +35,37 @@
   </section>
 
   <section class="card">
-
     <h2>1. 会員情報</h2>
 
     <div class="form-grid">
-
       <div class="field">
-        <label>会員番号</label>
-        <input type="text" id="memberNo" placeholder="例）123456">
+        <label>会員番号 / MEMBER NO.（6 DIGITS）</label>
+        <input type="text" id="memberNo" inputmode="numeric" maxlength="6" placeholder="例）123456">
       </div>
 
       <div class="field">
-        <label>氏名</label>
+        <label>氏名 / NAME</label>
         <input type="text" id="name" placeholder="例）山田 太郎">
       </div>
 
       <div class="field">
-        <label>メールアドレス</label>
+        <label>メールアドレス / EMAIL</label>
         <input type="email" id="email" placeholder="例）example@example.com">
       </div>
-
     </div>
-
   </section>
 
   <section class="card">
-
     <h2>2. 休会内容</h2>
 
     <div class="form-grid">
-
       <div class="field">
-        <label>休会開始月</label>
+        <label>休会開始月 / START MONTH</label>
         <input type="text" id="startMonth" readonly>
       </div>
 
       <div class="field">
-        <label>休会期間</label>
-
+        <label>休会期間 / SUSPENSION PERIOD</label>
         <select id="months">
           <option value="1">1か月</option>
           <option value="2">2か月</option>
@@ -81,12 +75,11 @@
           <option value="6">6か月</option>
         </select>
 
+        <div class="end-date" id="endDateText"></div>
       </div>
-
     </div>
 
     <div class="price-box">
-
       <div class="price-left">
         <div class="price-label">休会費合計</div>
         <div class="price" id="price">550円</div>
@@ -94,68 +87,30 @@
       </div>
 
       <div class="price-right">
-
-        <div class="price-row">
-          1ヶ月あたり：550円（税込）
-        </div>
-
-        <div class="price-row" id="priceDetail">
-          1か月 × 550円
-        </div>
-
-        <div class="price-row">
-          決済日：休会開始前月27日
-        </div>
-
+        <div class="price-row">1ヶ月あたり：550円（税込）</div>
+        <div class="price-row" id="priceDetail">1か月 × 550円</div>
+        <div class="price-row">決済日：休会開始前月27日</div>
       </div>
-
     </div>
-
   </section>
 
   <section class="card">
-
     <h2>ご確認ください</h2>
 
     <ul class="notes">
-
-<li>
-1回のお手続きで最大6ヶ月まで休会が可能です。
-</li>
-
-<li>
-9日20:00までにお手続きされた場合、休会開始が翌月1日からとなります。
-</li>
-
-<li>
-休会費はひと月あたり550円（税込）です。初回休会月の決済時に550円 × 休会月数分がまとめて決済されます。
-</li>
-
-<li>
-休会期間終了後、自動的に復会となります。延長をご希望の場合は、改めて休会手続きが必要です。
-</li>
-
-<li>
-休会期間は、キャンペーン条件の継続期間には該当しませんのでご注意ください。<br>
-休会中も会員ステータスは継続されますので、長期継続割引などの特別価格は復会後も引き続き適用されます。
-</li>
-
-<li>
-予定より早く復会をご希望される場合は、ご連絡いただければご希望日から復会処理をいたします。<br>
-なお、復会時は会費が日割りで発生いたしますが、未消化分の休会費の会費等への充当、返金はできません。
-</li>
-
-<li>
-プライベートロッカーご利用の場合は休会期間中も継続課金されます。
-</li>
-
-</ul>
+      <li>1回のお手続きで最大6ヶ月まで休会が可能です。</li>
+      <li>9日20:00までにお手続きされた場合、休会開始が翌月1日からとなります。</li>
+      <li>休会費はひと月あたり550円（税込）です。初回休会月の決済時に550円 × 休会月数分がまとめて決済されます。</li>
+      <li>休会期間終了後、自動的に復会となります。延長をご希望の場合は、改めて休会手続きが必要です。</li>
+      <li>休会期間は、キャンペーン条件の継続期間には該当しませんのでご注意ください。<br>休会中も会員ステータスは継続されますので、長期継続割引などの特別価格は復会後も引き続き適用されます。</li>
+      <li>予定より早く復会をご希望される場合は、ご連絡いただければご希望日から復会処理をいたします。<br>なお、復会時は会費が日割りで発生いたしますが、未消化分の休会費の会費等への充当、返金はできません。</li>
+      <li>プライベートロッカーご利用の場合は休会期間中も継続課金されます。</li>
+    </ul>
 
     <label class="agree-wrap">
       <input type="checkbox" id="agree">
       <span>上記内容に同意します</span>
     </label>
-
   </section>
 
   <button class="submit-btn" id="submitBtn">
@@ -164,7 +119,7 @@
 
 </div>
 
-<script src="app.js?v=1"></script>
+<script src="app.js?v=2"></script>
 
 </body>
 </html>

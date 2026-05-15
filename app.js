@@ -127,6 +127,59 @@ document
     return;
   }
 
-  alert("送信処理を実装してください");
+ fetch("https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec",{
+
+  method:"POST",
+
+  headers:{
+    "Content-Type":"application/json"
+  },
+
+  body:JSON.stringify({
+
+    memberNo,
+    name,
+    email,
+
+    startMonth:
+    startMonthInput.value,
+
+    months:
+    monthsSelect.value,
+
+    endDate:
+    endDateText.innerText,
+
+    price:
+    priceEl.innerText.replace("円","")
+
+  })
+
+})
+.then(r=>r.json())
+.then(data=>{
+
+  if(data.success){
+
+    alert("休会届を受付しました");
+
+    location.reload();
+
+  }else{
+
+    alert("送信失敗");
+
+    console.log(data);
+
+  }
+
+})
+.catch(err=>{
+
+  alert("通信エラー");
+
+  console.log(err);
+
+});
 
 });

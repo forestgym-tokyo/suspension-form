@@ -225,12 +225,21 @@ function submitForm(){
   input.name = "payload";
   input.value = JSON.stringify(payload);
 
-  form.appendChild(input);
-  document.body.appendChild(form);
-  form.submit();
+form.appendChild(input);
+document.body.appendChild(form);
+
+submitBtn.disabled = true;
+submitBtn.innerText = "送信中...";
+
+form.submit();
+
+setTimeout(()=>{
 
   alert("休会届を受付しました");
+
   location.reload();
+
+},3000);
 }
 
 monthsSelect.addEventListener("change", updateDisplay);

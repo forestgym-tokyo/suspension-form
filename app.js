@@ -31,7 +31,7 @@ function calcStartMonth(){
 
 function formatMonth(d){
 
-  return `${d.getFullYear()}年${d.getMonth()+1}月1日から開始`;
+  return `${d.getFullYear()}年${d.getMonth()+1}月`;
 
 }
 
@@ -40,8 +40,8 @@ function updateStartMonth(){
   const start = calcStartMonth();
 
   if(startMonthInput){
-  startMonthInput.value = formatMonth(start);
-}
+    startMonthInput.value = formatMonth(start);
+  }
 
   const now = new Date();
 
@@ -53,8 +53,11 @@ function updateStartMonth(){
     nextMonth = 1;
   }
 
-  exampleText.innerHTML =
-  `例）${currentMonth}月9日20:00までの送信 → ${nextMonth}月1日からの開始です。`;
+  if(exampleText){
+    exampleText.innerHTML =
+    `例）${currentMonth}月9日20:00までの送信 → ${nextMonth}月1日からの開始です。`;
+  }
+
 }
 
 function updatePrice(){
@@ -63,11 +66,15 @@ function updatePrice(){
 
   const total = months * PRICE_PER_MONTH;
 
-  priceEl.textContent =
-  total.toLocaleString() + "円";
+  if(priceEl){
+    priceEl.textContent =
+    total.toLocaleString() + "円";
+  }
 
-  priceDetail.textContent =
-  `${months}か月 × 550円（税込）`;
+  if(priceDetail){
+    priceDetail.textContent =
+    `${months}か月 × 550円（税込）`;
+  }
 
   const start = calcStartMonth();
 
@@ -79,12 +86,15 @@ function updatePrice(){
 
   if(endDateText){
     endDateText.innerHTML =
-    `休会最終日 / END DATE<br>${end.getFullYear()}年${end.getMonth()+1}月${end.getDate()}日`;
+    `休会最終日 / END DATE<br>
+    ${end.getFullYear()}年${end.getMonth()+1}月${end.getDate()}日`;
   }
 
 }
 
-monthsSelect.addEventListener("change",updatePrice);
+if(monthsSelect){
+  monthsSelect.addEventListener("change",updatePrice);
+}
 
 updateStartMonth();
 updatePrice();
@@ -129,44 +139,40 @@ document
     return;
   }
 
-const payload = {
-  memberNo,
-  name,
-  email,
-  startMonth: startMonthInput.value,
-  months: monthsSelect.value,
-  endDate: endDateText.innerText,
-  price: priceEl.innerText.replace("円","")
-};
+  const payload = {
+    memberNo,
+    name,
+    email,
+    startMonth: startMonthInput.value,
+    months: monthsSelect.value,
+    endDate: endDateText.innerText,
+    price: priceEl.innerText.replace("円","")
+  };
 
-const iframe = document.createElement("iframe");
-iframe.name = "hidden_iframe";
-iframe.style.display = "none";
-document.body.appendChild(iframe);
+  const iframe = document.createElement("iframe");
+  iframe.name = "hidden_iframe";
+  iframe.style.display = "none";
+  document.body.appendChild(iframe);
 
-const form = document.createElement("form");
-form.method = "POST";
-form.action = "https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec";
-form.target = "hidden_iframe";
-form.style.display = "none";
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = "https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec";
+  form.target = "hidden_iframe";
+  form.style.display = "none";
 
-const input = document.createElement("input");
-input.type = "hidden";
-input.name = "payload";
-input.value = JSON.stringify(payload);
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "payload";
+  input.value = JSON.stringify(payload);
 
-form.appendChild(input);
-document.body.appendChild(form);
+  form.appendChild(input);
 
-form.submit();
+  document.body.appendChild(form);
 
-alert("休会届を受付しました");
-location.reload();
+  form.submit();
 
-  alert("通信エラー");
+  alert("休会届を受付しました");
 
-  console.log(err);
-
-});
+  location.reload();
 
 });

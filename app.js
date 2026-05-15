@@ -127,40 +127,39 @@ document
     return;
   }
 
-fetch("https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec",{
+const payload = {
+  memberNo,
+  name,
+  email,
+  startMonth: startMonthInput.value,
+  months: monthsSelect.value,
+  endDate: endDateText.innerText,
+  price: priceEl.innerText.replace("円","")
+};
 
-  method:"POST",
-  mode:"no-cors",
+const iframe = document.createElement("iframe");
+iframe.name = "hidden_iframe";
+iframe.style.display = "none";
+document.body.appendChild(iframe);
 
-  body:JSON.stringify({
+const form = document.createElement("form");
+form.method = "POST";
+form.action = "https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec";
+form.target = "hidden_iframe";
+form.style.display = "none";
 
-    memberNo,
-    name,
-    email,
+const input = document.createElement("input");
+input.type = "hidden";
+input.name = "payload";
+input.value = JSON.stringify(payload);
 
-    startMonth:
-    startMonthInput.value,
+form.appendChild(input);
+document.body.appendChild(form);
 
-    months:
-    monthsSelect.value,
+form.submit();
 
-    endDate:
-    endDateText.innerText,
-
-    price:
-    priceEl.innerText.replace("円","")
-
-  })
-
-})
-.then(()=>{
-
-  alert("休会届を受付しました");
-
-  location.reload();
-
-})
-.catch(err=>{
+alert("休会届を受付しました");
+location.reload();
 
   alert("通信エラー");
 

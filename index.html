@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>休会届フォーム | The Forest Gym</title>
-  <link rel="stylesheet" href="style.css?v=2">
+  <link rel="stylesheet" href="style.css?v=10">
 </head>
 
 <body>
@@ -26,11 +26,9 @@
     <div class="notice-title">
       毎月9日20:00までの送信で翌月1日から休会開始となります。
     </div>
-
     <div class="notice-sub">
       以降は翌々月1日から休会開始となります。
     </div>
-
     <div class="example" id="exampleText"></div>
   </section>
 
@@ -119,7 +117,126 @@
 
 </div>
 
-<script src="app.js?v=2"></script>
+<script>
+const PRICE_PER_MONTH = 550;
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec";
+
+const startMonthInput = document.getElementById("startMonth");
+const monthsSelect = document.getElementById("months");
+const priceEl = document.getElementById("price");
+const priceDetail = document.getElementById("priceDetail");
+const exampleText = document.getElementById("exampleText");
+const endDateText = document.getElementById("endDateText");
+const submitBtn = document.getElementById("submitBtn");
+
+function calcStartMonth(){
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  const deadline = new Date(y, m, 9, 20, 0, 0);
+
+  if(now <= deadline){
+    return new Date(y, m + 1, 1);
+  }
+
+  return new Date(y, m + 2, 1);
+}
+
+function updateDisplay(){
+  const start = calcStartMonth();
+  const months = Number(monthsSelect.value || 1);
+  const total = months * PRICE_PER_MONTH;
+
+  startMonthInput.value = `${start.getFullYear()}年${start.getMonth() + 1}月`;
+
+  const end = new Date(
+    start.getFullYear(),
+    start.getMonth() + months,
+    0
+  );
+
+  endDateText.innerHTML =
+    `休会最終日 / END DATE<br>${end.getFullYear()}年${end.getMonth() + 1}月${end.getDate()}日`;
+
+  priceEl.textContent = total.toLocaleString() + "円";
+  priceDetail.textContent = `${months}か月 × 550円（税込）`;
+
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+  let nextMonth = currentMonth + 1;
+
+  if(nextMonth > 12){
+    nextMonth = 1;
+  }
+
+  exampleText.textContent =
+    `例）${currentMonth}月9日20:00までの送信 → ${nextMonth}月1日からの開始です。`;
+}
+
+function submitForm(){
+  const memberNo = document.getElementById("memberNo").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const agree = document.getElementById("agree").checked;
+
+  if(!memberNo || !name || !email){
+    alert("必須項目を入力してください");
+    return;
+  }
+
+  if(!/^\d{6}$/.test(memberNo)){
+    alert("会員番号は6桁の数字で入力してください");
+    return;
+  }
+
+  if(!email.includes("@")){
+    alert("メールアドレスを正しく入力してください");
+    return;
+  }
+
+  if(!agree){
+    alert("同意チェックをしてください");
+    return;
+  }
+
+  const payload = {
+    memberNo,
+    name,
+    email,
+    startMonth: startMonthInput.value,
+    months: monthsSelect.value,
+    endDate: endDateText.innerText,
+    price: priceEl.innerText.replace("円","")
+  };
+
+  const iframe = document.createElement("iframe");
+  iframe.name = "hidden_iframe_" + Date.now();
+  iframe.style.display = "none";
+  document.body.appendChild(iframe);
+
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = GAS_URL;
+  form.target = iframe.name;
+  form.style.display = "none";
+
+  const input = document.createElement("input");
+  input.type = "hidden";
+  input.name = "payload";
+  input.value = JSON.stringify(payload);
+
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
+
+  alert("休会届を受付しました");
+  location.reload();
+}
+
+monthsSelect.addEventListener("change", updateDisplay);
+submitBtn.addEventListener("click", submitForm);
+updateDisplay();
+</script>
 
 </body>
 </html>

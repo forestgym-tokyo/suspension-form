@@ -118,32 +118,11 @@
 </div>
 
 <script>
-  const params = new URLSearchParams(location.search);
-
-const token = params.get("token");
-
-if(!token){
-
-  document.body.innerHTML = `
-  <div style="
-    color:white;
-    background:black;
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:24px;
-    font-family:sans-serif;
-  ">
-    INVALID ACCESS
-  </div>
-  `;
-
-  throw new Error("NO TOKEN");
-
-}
 const PRICE_PER_MONTH = 550;
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec";
+
+const params = new URLSearchParams(location.search);
+const token = params.get("token");
 
 const startMonthInput = document.getElementById("startMonth");
 const monthsSelect = document.getElementById("months");
@@ -153,6 +132,48 @@ const exampleText = document.getElementById("exampleText");
 const endDateText = document.getElementById("endDateText");
 const submitBtn = document.getElementById("submitBtn");
 
+document.querySelector(".container").style.display = "none";
+
+function showInvalid(message){
+  document.body.innerHTML = `
+    <div style="
+      color:white;
+      background:black;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:22px;
+      font-family:sans-serif;
+      padding:24px;
+    ">
+      このURLは無効です<br>
+      ${message}
+    </div>
+  `;
+}
+
+if(!token){
+  showInvalid("TOKENなし");
+  throw new Error("NO TOKEN");
+}
+
+window.verifyTokenCallback = function(res){
+
+  if(!res.success){
+    showInvalid(res.message);
+    return;
+  }
+
+  document.querySelector(".container").style.display = "block";
+};
+
+const verifyScript = document.createElement("script");
+verifyScript.src =
+  GAS_URL + "?action=verifyToken&token=" + encodeURIComponent(token) + "&callback=verifyTokenCallback";
+
+document.body.appendChild(verifyScript);
 function calcStartMonth(){
   const now = new Date();
   const y = now.getFullYear();

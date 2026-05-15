@@ -244,15 +244,16 @@ function submitForm(){
     return;
   }
 
-  const payload = {
-    memberNo,
-    name,
-    email,
-    startMonth: startMonthInput.value,
-    months: monthsSelect.value,
-    endDate: endDateText.innerText,
-    price: priceEl.innerText.replace("円","")
-  };
+ const payload = {
+  token,
+  memberNo,
+  name,
+  email,
+  startMonth: startMonthInput.value,
+  months: monthsSelect.value,
+  endDate: endDateText.innerText,
+  price: priceEl.innerText.replace("円","")
+};
 
   const iframe = document.createElement("iframe");
   iframe.name = "hidden_iframe_" + Date.now();

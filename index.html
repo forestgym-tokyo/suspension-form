@@ -118,6 +118,30 @@
 </div>
 
 <script>
+  const params = new URLSearchParams(location.search);
+
+const token = params.get("token");
+
+if(!token){
+
+  document.body.innerHTML = `
+  <div style="
+    color:white;
+    background:black;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    font-family:sans-serif;
+  ">
+    INVALID ACCESS
+  </div>
+  `;
+
+  throw new Error("NO TOKEN");
+
+}
 const PRICE_PER_MONTH = 550;
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec";
 

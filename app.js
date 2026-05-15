@@ -127,13 +127,10 @@ document
     return;
   }
 
- fetch("https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec",{
+fetch("https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec",{
 
   method:"POST",
-
-  headers:{
-    "Content-Type":"application/json"
-  },
+  mode:"no-cors",
 
   body:JSON.stringify({
 
@@ -156,22 +153,11 @@ document
   })
 
 })
-.then(r=>r.json())
-.then(data=>{
+.then(()=>{
 
-  if(data.success){
+  alert("休会届を受付しました");
 
-    alert("休会届を受付しました");
-
-    location.reload();
-
-  }else{
-
-    alert("送信失敗");
-
-    console.log(data);
-
-  }
+  location.reload();
 
 })
 .catch(err=>{

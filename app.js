@@ -39,7 +39,9 @@ function updateStartMonth(){
 
   const start = calcStartMonth();
 
+  if(startMonthInput){
   startMonthInput.value = formatMonth(start);
+}
 
   const now = new Date();
 

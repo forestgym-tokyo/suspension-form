@@ -1,3 +1,122 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>休会届フォーム | The Forest Gym</title>
+  <link rel="stylesheet" href="style.css?v=10">
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<div class="container">
+
+  <header class="header">
+    <img src="logo.png" class="logo">
+    <div class="header-text">
+      <h1>休会届フォーム</h1>
+      <p class="sub">MEMBERSHIP SUSPENSION FORM</p>
+    </div>
+  </header>
+
+  <section class="card notice-card">
+    <div class="notice-title">
+      毎月9日20:00までの送信で翌月1日から休会開始となります。
+    </div>
+    <div class="notice-sub">
+      以降は翌々月1日から休会開始となります。
+    </div>
+    <div class="example" id="exampleText"></div>
+  </section>
+
+  <section class="card">
+    <h2>1. 会員情報</h2>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>会員番号 / MEMBER NO.（6 DIGITS）</label>
+        <input type="text" id="memberNo" inputmode="numeric" maxlength="6" placeholder="例）123456">
+      </div>
+
+      <div class="field">
+        <label>氏名 / NAME</label>
+        <input type="text" id="name" placeholder="例）山田 太郎">
+      </div>
+
+      <div class="field">
+        <label>メールアドレス / EMAIL</label>
+        <input type="email" id="email" placeholder="例）example@example.com">
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. 休会内容</h2>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>休会開始月 / START MONTH</label>
+        <input type="text" id="startMonth" readonly>
+      </div>
+
+      <div class="field">
+        <label>休会期間 / SUSPENSION PERIOD</label>
+        <select id="months">
+          <option value="1">1か月</option>
+          <option value="2">2か月</option>
+          <option value="3">3か月</option>
+          <option value="4">4か月</option>
+          <option value="5">5か月</option>
+          <option value="6">6か月</option>
+        </select>
+
+        <div class="end-date" id="endDateText"></div>
+      </div>
+    </div>
+
+    <div class="price-box">
+      <div class="price-left">
+        <div class="price-label">休会費合計</div>
+        <div class="price" id="price">550円</div>
+        <div class="tax">税込</div>
+      </div>
+
+      <div class="price-right">
+        <div class="price-row">1ヶ月あたり：550円（税込）</div>
+        <div class="price-row" id="priceDetail">1か月 × 550円</div>
+        <div class="price-row">決済日：休会開始前月27日</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>3. 確認事項</h2>
+
+    <ul class="notes">
+      <li>1回のお手続きで最大6ヶ月まで休会が可能です。</li>
+      <li>9日20:00までにお手続きされた場合、休会開始が翌月1日からとなります。</li>
+      <li>休会費はひと月あたり550円（税込）です。初回休会月の決済時に550円 × 休会月数分がまとめて決済されます。</li>
+      <li>休会期間終了後、自動的に復会となります。延長をご希望の場合は、改めて休会手続きが必要です。</li>
+      <li>休会期間は、キャンペーン条件の継続期間には該当しませんのでご注意ください。<br>休会中も会員ステータスは継続されますので、長期継続割引などの特別価格は復会後も引き続き適用されます。</li>
+      <li>予定より早く復会をご希望される場合は、ご連絡いただければご希望日から復会処理をいたします。<br>なお、復会時は会費が日割りで発生いたしますが、未消化分の休会費の会費等への充当、返金はできません。</li>
+      <li>プライベートロッカーご利用の場合は休会期間中も継続課金されます。</li>
+    </ul>
+
+    <label class="agree-wrap">
+      <input type="checkbox" id="agree">
+      <span>上記内容に同意します</span>
+    </label>
+  </section>
+
+  <button class="submit-btn" id="submitBtn">
+    休会届を送信する
+  </button>
+
+</div>
+
 <script>
 const PRICE_PER_MONTH = 550;
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec";
@@ -13,67 +132,53 @@ const exampleText = document.getElementById("exampleText");
 const endDateText = document.getElementById("endDateText");
 const submitBtn = document.getElementById("submitBtn");
 
-let suspensionEndDateText = "";
-let tokenChecked = false;
-let tokenOk = false;
+document.querySelector(".container").style.display = "none";
 
 function showInvalid(message){
-  alert("このURLは無効です：" + message);
-
-  if(submitBtn){
-    submitBtn.disabled = true;
-    submitBtn.innerText = "このURLは無効です";
-  }
+  document.body.innerHTML = `
+    <div style="
+      color:white;
+      background:black;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:22px;
+      font-family:sans-serif;
+      padding:24px;
+    ">
+      このURLは無効です<br>
+      ${message}
+    </div>
+  `;
 }
 
 if(!token){
-
   showInvalid("TOKENなし");
-
-}else{
-
-  window.verifyTokenCallback = function(res){
-
-    tokenChecked = true;
-
-    if(!res || !res.success){
-
-      showInvalid(
-        res && res.message
-        ? res.message
-        : "TOKEN確認エラー"
-      );
-
-      return;
-    }
-
-    tokenOk = true;
-  };
-
-  const verifyScript = document.createElement("script");
-
-  verifyScript.onerror = function(){
-    showInvalid("TOKEN確認に失敗しました");
-  };
-
-  verifyScript.src =
-    GAS_URL +
-    "?action=verifyToken&token=" +
-    encodeURIComponent(token) +
-    "&callback=verifyTokenCallback";
-
-  document.body.appendChild(verifyScript);
+  throw new Error("NO TOKEN");
 }
 
+window.verifyTokenCallback = function(res){
+
+  if(!res.success){
+    showInvalid(res.message);
+    return;
+  }
+
+  document.querySelector(".container").style.display = "block";
+};
+
+const verifyScript = document.createElement("script");
+verifyScript.src =
+  GAS_URL + "?action=verifyToken&token=" + encodeURIComponent(token) + "&callback=verifyTokenCallback";
+
+document.body.appendChild(verifyScript);
 function calcStartMonth(){
-
   const now = new Date();
-
   const y = now.getFullYear();
   const m = now.getMonth();
-
-  const deadline =
-  new Date(y, m, 9, 20, 0, 0);
+  const deadline = new Date(y, m, 9, 20, 0, 0);
 
   if(now <= deadline){
     return new Date(y, m + 1, 1);
@@ -83,17 +188,11 @@ function calcStartMonth(){
 }
 
 function updateDisplay(){
-
   const start = calcStartMonth();
+  const months = Number(monthsSelect.value || 1);
+  const total = months * PRICE_PER_MONTH;
 
-  const months =
-  Number(monthsSelect.value || 1);
-
-  const total =
-  months * PRICE_PER_MONTH;
-
-  startMonthInput.value =
-  `${start.getFullYear()}年${start.getMonth() + 1}月`;
+  startMonthInput.value = `${start.getFullYear()}年${start.getMonth() + 1}月`;
 
   const end = new Date(
     start.getFullYear(),
@@ -101,170 +200,98 @@ function updateDisplay(){
     0
   );
 
-  suspensionEndDateText =
-  `${end.getFullYear()}年${end.getMonth() + 1}月${end.getDate()}日`;
-
   endDateText.innerHTML =
-  `休会最終日<br>${suspensionEndDateText}`;
+    `休会最終日 / END DATE<br>${end.getFullYear()}年${end.getMonth() + 1}月${end.getDate()}日`;
 
-  priceEl.textContent =
-  total.toLocaleString() + "円";
-
-  priceDetail.textContent =
-  `${months}か月 × 550円（税込）`;
+  priceEl.textContent = total.toLocaleString() + "円";
+  priceDetail.textContent = `${months}か月 × 550円（税込）`;
 
   const now = new Date();
-
-  const currentMonth =
-  now.getMonth() + 1;
-
-  let nextMonth =
-  currentMonth + 1;
+  const currentMonth = now.getMonth() + 1;
+  let nextMonth = currentMonth + 1;
 
   if(nextMonth > 12){
     nextMonth = 1;
   }
 
   exampleText.textContent =
-  `例）${currentMonth}月9日20:00までの送信 → ${nextMonth}月1日からの開始です。`;
+    `例）${currentMonth}月9日20:00までの送信 → ${nextMonth}月1日からの開始です。`;
 }
 
 function submitForm(){
-
-  updateDisplay();
-
-  if(!tokenOk){
-
-    alert("URL確認中です。数秒待ってから再度お試しください。");
-
-    return;
-  }
-
-  const memberNo =
-  document.getElementById("memberNo").value.trim();
-
-  const name =
-  document.getElementById("name").value.trim();
-
-  const email =
-  document.getElementById("email").value.trim();
-
-  const agree =
-  document.getElementById("agree").checked;
+  const memberNo = document.getElementById("memberNo").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const agree = document.getElementById("agree").checked;
 
   if(!memberNo || !name || !email){
-
     alert("必須項目を入力してください");
-
     return;
   }
 
   if(!/^\d{6}$/.test(memberNo)){
-
     alert("会員番号は6桁の数字で入力してください");
-
     return;
   }
 
   if(!email.includes("@")){
-
     alert("メールアドレスを正しく入力してください");
-
     return;
   }
 
   if(!agree){
-
     alert("同意チェックをしてください");
-
     return;
   }
 
-  const payload = {
+ const payload = {
+  token,
+  memberNo,
+  name,
+  email,
+  startMonth: startMonthInput.value,
+  months: monthsSelect.value,
+  endDate: endDateText.innerText,
+  price: priceEl.innerText.replace("円","")
+};
 
-    token: token,
-    memberNo: memberNo,
-    name: name,
-    email: email,
-
-    startMonth:
-    startMonthInput.value,
-
-    months:
-    monthsSelect.value,
-
-    endDate:
-    suspensionEndDateText,
-
-    price:
-    priceEl.innerText.replace("円","")
-  };
-
-  const iframe =
-  document.createElement("iframe");
-
-  iframe.name =
-  "hidden_iframe_" + Date.now();
-
+  const iframe = document.createElement("iframe");
+  iframe.name = "hidden_iframe_" + Date.now();
   iframe.style.display = "none";
-
   document.body.appendChild(iframe);
 
-  const form =
-  document.createElement("form");
-
+  const form = document.createElement("form");
   form.method = "POST";
   form.action = GAS_URL;
   form.target = iframe.name;
   form.style.display = "none";
 
-  const input =
-  document.createElement("input");
-
+  const input = document.createElement("input");
   input.type = "hidden";
   input.name = "payload";
   input.value = JSON.stringify(payload);
 
-  form.appendChild(input);
+form.appendChild(input);
+document.body.appendChild(form);
 
-  document.body.appendChild(form);
+submitBtn.disabled = true;
+submitBtn.innerText = "送信中...";
 
-  submitBtn.disabled = true;
-  submitBtn.innerText = "送信中...";
+form.submit();
 
-  form.submit();
+setTimeout(()=>{
 
-  setTimeout(function(){
+  alert("休会届を受付しました");
 
-    document.body.innerHTML = `
-      <div style="
-        min-height:100vh;
-        background:#000;
-        color:#fff;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        flex-direction:column;
-        font-family:sans-serif;
-        text-align:center;
-      ">
-        <h1>受付完了</h1>
-        <p>休会届を受付しました。</p>
-      </div>
-    `;
+  location.reload();
 
-  },3000);
+},3000);
 }
 
-monthsSelect.addEventListener(
-  "change",
-  updateDisplay
-);
-
-submitBtn.addEventListener(
-  "click",
-  submitForm
-);
-
+monthsSelect.addEventListener("change", updateDisplay);
+submitBtn.addEventListener("click", submitForm);
 updateDisplay();
 </script>
+
+</body>
+</html>

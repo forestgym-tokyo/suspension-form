@@ -15,7 +15,8 @@ const submitBtn = document.getElementById("submitBtn");
 
 let suspensionEndDateText = "";
 
-document.querySelector(".container").style.display = "none";
+const container = document.querySelector(".container");
+container.style.display = "none";
 
 function showInvalid(message){
   document.body.innerHTML = `
@@ -42,19 +43,36 @@ if(!token){
   throw new Error("NO TOKEN");
 }
 
+let tokenChecked = false;
+
 window.verifyTokenCallback = function(res){
-  if(!res.success){
-    showInvalid(res.message);
+
+  tokenChecked = true;
+
+  if(!res || !res.success){
+    showInvalid(res && res.message ? res.message : "TOKEN確認エラー");
     return;
   }
 
-  document.querySelector(".container").style.display = "block";
+  container.style.display = "block";
 };
 
 const verifyScript = document.createElement("script");
+
+verifyScript.onerror = function(){
+  showInvalid("TOKEN確認に失敗しました");
+};
+
 verifyScript.src =
   GAS_URL + "?action=verifyToken&token=" + encodeURIComponent(token) + "&callback=verifyTokenCallback";
+
 document.body.appendChild(verifyScript);
+
+setTimeout(function(){
+  if(!tokenChecked){
+    showInvalid("TOKEN確認がタイムアウトしました");
+  }
+},8000);
 
 function calcStartMonth(){
   const now = new Date();

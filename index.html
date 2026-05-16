@@ -26,7 +26,12 @@ function showInvalid(message){
 if(!token){
   showInvalid("TOKENなし");
 }else{
+
+  alert("before verify");
+
   window.verifyTokenCallback = function(res){
+
+    alert("verify callback");
 
     if(!res || !res.success){
       showInvalid(res && res.message ? res.message : "TOKEN確認エラー");

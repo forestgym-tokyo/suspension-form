@@ -201,8 +201,11 @@ function updateDisplay(){
     0
   );
 
-  endDateText.innerHTML =
-    `休会最終日 / END DATE<br>${end.getFullYear()}年${end.getMonth() + 1}月${end.getDate()}日`;
+suspensionEndDateText =
+  `${end.getFullYear()}年${end.getMonth() + 1}月${end.getDate()}日`;
+
+endDateText.innerHTML =
+  `休会最終日<br>${suspensionEndDateText}`;
 
   priceEl.textContent = total.toLocaleString() + "円";
   priceDetail.textContent = `${months}か月 × 550円（税込）`;

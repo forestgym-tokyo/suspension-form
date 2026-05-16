@@ -168,11 +168,25 @@ function submitForm(){
 
   form.submit();
 
-  setTimeout(()=>{
-    alert("休会届を受付しました");
-    location.reload();
-  },3000);
-}
+setTimeout(function(){
+
+  document.body.innerHTML = `
+    <div style="
+      min-height:100vh;
+      background:#000;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      font-family:sans-serif;
+      text-align:center;
+      padding:24px;
+    ">
+      <h1>受付完了</h1>
+      <p>休会届を受付しました。</p>
+    </div>
+  `;
 
 monthsSelect.addEventListener("change", updateDisplay);
 submitBtn.addEventListener("click", submitForm);

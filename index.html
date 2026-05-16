@@ -14,65 +14,37 @@ const endDateText = document.getElementById("endDateText");
 const submitBtn = document.getElementById("submitBtn");
 
 let suspensionEndDateText = "";
-
-const container = document.querySelector(".container");
-container.style.display = "none";
+let tokenOk = false;
 
 function showInvalid(message){
-  document.body.innerHTML = `
-    <div style="
-      color:white;
-      background:black;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      font-size:22px;
-      font-family:sans-serif;
-      padding:24px;
-    ">
-      このURLは無効です<br>
-      ${message}
-    </div>
-  `;
+  alert("このURLは無効です：" + message);
+  submitBtn.disabled = true;
+  submitBtn.innerText = "このURLは無効です";
 }
 
 if(!token){
   showInvalid("TOKENなし");
-  throw new Error("NO TOKEN");
+}else{
+  window.verifyTokenCallback = function(res){
+
+    if(!res || !res.success){
+      showInvalid(res && res.message ? res.message : "TOKEN確認エラー");
+      return;
+    }
+
+    tokenOk = true;
+  };
+
+  const verifyScript = document.createElement("script");
+  verifyScript.onerror = function(){
+    showInvalid("TOKEN確認に失敗しました");
+  };
+
+  verifyScript.src =
+    GAS_URL + "?action=verifyToken&token=" + encodeURIComponent(token) + "&callback=verifyTokenCallback";
+
+  document.body.appendChild(verifyScript);
 }
-
-let tokenChecked = false;
-
-window.verifyTokenCallback = function(res){
-
-  tokenChecked = true;
-
-  if(!res || !res.success){
-    showInvalid(res && res.message ? res.message : "TOKEN確認エラー");
-    return;
-  }
-
-  container.style.display = "block";
-};
-
-const verifyScript = document.createElement("script");
-
-verifyScript.onerror = function(){
-  showInvalid("TOKEN確認に失敗しました");
-};
-
-verifyScript.src =
-  GAS_URL + "?action=verifyToken&token=" + encodeURIComponent(token) + "&callback=verifyTokenCallback";
-
-document.body.appendChild(verifyScript);
-
-setTimeout(function(){
-  if(!tokenChecked){
-    showInvalid("TOKEN確認がタイムアウトしました");
-  }
-},8000);
 
 function calcStartMonth(){
   const now = new Date();
@@ -123,6 +95,11 @@ function updateDisplay(){
 
 function submitForm(){
   updateDisplay();
+
+  if(!tokenOk){
+    alert("URL確認中です。数秒待ってから再度お試しください。");
+    return;
+  }
 
   const memberNo = document.getElementById("memberNo").value.trim();
   const name = document.getElementById("name").value.trim();

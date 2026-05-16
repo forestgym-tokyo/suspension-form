@@ -1,6 +1,5 @@
 <script>
 const PRICE_PER_MONTH = 550;
-alert("script start");
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwC5rNeeaWud79fT8nNbiG2gKNG2PHwc8dJ_fc8TfOBZht0ECW1p_iGa74s3ZrlT2-7/exec";
 
 const params = new URLSearchParams(location.search);
@@ -13,29 +12,38 @@ const priceDetail = document.getElementById("priceDetail");
 const exampleText = document.getElementById("exampleText");
 const endDateText = document.getElementById("endDateText");
 const submitBtn = document.getElementById("submitBtn");
-alert("after elements");
 
 let suspensionEndDateText = "";
+let tokenChecked = false;
 let tokenOk = false;
 
 function showInvalid(message){
   alert("このURLは無効です：" + message);
-  submitBtn.disabled = true;
-  submitBtn.innerText = "このURLは無効です";
+
+  if(submitBtn){
+    submitBtn.disabled = true;
+    submitBtn.innerText = "このURLは無効です";
+  }
 }
 
 if(!token){
-  showInvalid("TOKENなし");
-}else{
 
-  alert("before verify");
+  showInvalid("TOKENなし");
+
+}else{
 
   window.verifyTokenCallback = function(res){
 
-    alert("verify callback");
+    tokenChecked = true;
 
     if(!res || !res.success){
-      showInvalid(res && res.message ? res.message : "TOKEN確認エラー");
+
+      showInvalid(
+        res && res.message
+        ? res.message
+        : "TOKEN確認エラー"
+      );
+
       return;
     }
 
@@ -43,21 +51,29 @@ if(!token){
   };
 
   const verifyScript = document.createElement("script");
+
   verifyScript.onerror = function(){
     showInvalid("TOKEN確認に失敗しました");
   };
 
   verifyScript.src =
-    GAS_URL + "?action=verifyToken&token=" + encodeURIComponent(token) + "&callback=verifyTokenCallback";
+    GAS_URL +
+    "?action=verifyToken&token=" +
+    encodeURIComponent(token) +
+    "&callback=verifyTokenCallback";
 
   document.body.appendChild(verifyScript);
 }
 
 function calcStartMonth(){
+
   const now = new Date();
+
   const y = now.getFullYear();
   const m = now.getMonth();
-  const deadline = new Date(y, m, 9, 20, 0, 0);
+
+  const deadline =
+  new Date(y, m, 9, 20, 0, 0);
 
   if(now <= deadline){
     return new Date(y, m + 1, 1);
@@ -67,11 +83,17 @@ function calcStartMonth(){
 }
 
 function updateDisplay(){
-  const start = calcStartMonth();
-  const months = Number(monthsSelect.value || 1);
-  const total = months * PRICE_PER_MONTH;
 
-  startMonthInput.value = `${start.getFullYear()}年${start.getMonth() + 1}月`;
+  const start = calcStartMonth();
+
+  const months =
+  Number(monthsSelect.value || 1);
+
+  const total =
+  months * PRICE_PER_MONTH;
+
+  startMonthInput.value =
+  `${start.getFullYear()}年${start.getMonth() + 1}月`;
 
   const end = new Date(
     start.getFullYear(),
@@ -80,87 +102,131 @@ function updateDisplay(){
   );
 
   suspensionEndDateText =
-    `${end.getFullYear()}年${end.getMonth() + 1}月${end.getDate()}日`;
+  `${end.getFullYear()}年${end.getMonth() + 1}月${end.getDate()}日`;
 
   endDateText.innerHTML =
-    `休会最終日<br><span>${suspensionEndDateText}</span>`;
+  `休会最終日<br>${suspensionEndDateText}`;
 
-  priceEl.textContent = total.toLocaleString() + "円";
-  priceDetail.textContent = `${months}か月 × 550円（税込）`;
+  priceEl.textContent =
+  total.toLocaleString() + "円";
+
+  priceDetail.textContent =
+  `${months}か月 × 550円（税込）`;
 
   const now = new Date();
-  const currentMonth = now.getMonth() + 1;
-  let nextMonth = currentMonth + 1;
+
+  const currentMonth =
+  now.getMonth() + 1;
+
+  let nextMonth =
+  currentMonth + 1;
 
   if(nextMonth > 12){
     nextMonth = 1;
   }
 
   exampleText.textContent =
-    `例）${currentMonth}月9日20:00までの送信 → ${nextMonth}月1日からの開始です。`;
+  `例）${currentMonth}月9日20:00までの送信 → ${nextMonth}月1日からの開始です。`;
 }
 
 function submitForm(){
+
   updateDisplay();
 
   if(!tokenOk){
+
     alert("URL確認中です。数秒待ってから再度お試しください。");
+
     return;
   }
 
-  const memberNo = document.getElementById("memberNo").value.trim();
-  const name = document.getElementById("name").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const agree = document.getElementById("agree").checked;
+  const memberNo =
+  document.getElementById("memberNo").value.trim();
+
+  const name =
+  document.getElementById("name").value.trim();
+
+  const email =
+  document.getElementById("email").value.trim();
+
+  const agree =
+  document.getElementById("agree").checked;
 
   if(!memberNo || !name || !email){
+
     alert("必須項目を入力してください");
+
     return;
   }
 
   if(!/^\d{6}$/.test(memberNo)){
+
     alert("会員番号は6桁の数字で入力してください");
+
     return;
   }
 
   if(!email.includes("@")){
+
     alert("メールアドレスを正しく入力してください");
+
     return;
   }
 
   if(!agree){
+
     alert("同意チェックをしてください");
+
     return;
   }
 
   const payload = {
+
     token: token,
     memberNo: memberNo,
     name: name,
     email: email,
-    startMonth: startMonthInput.value,
-    months: monthsSelect.value,
-    endDate: suspensionEndDateText,
-    price: priceEl.innerText.replace("円","")
+
+    startMonth:
+    startMonthInput.value,
+
+    months:
+    monthsSelect.value,
+
+    endDate:
+    suspensionEndDateText,
+
+    price:
+    priceEl.innerText.replace("円","")
   };
 
-  const iframe = document.createElement("iframe");
-  iframe.name = "hidden_iframe_" + Date.now();
+  const iframe =
+  document.createElement("iframe");
+
+  iframe.name =
+  "hidden_iframe_" + Date.now();
+
   iframe.style.display = "none";
+
   document.body.appendChild(iframe);
 
-  const form = document.createElement("form");
+  const form =
+  document.createElement("form");
+
   form.method = "POST";
   form.action = GAS_URL;
   form.target = iframe.name;
   form.style.display = "none";
 
-  const input = document.createElement("input");
+  const input =
+  document.createElement("input");
+
   input.type = "hidden";
   input.name = "payload";
   input.value = JSON.stringify(payload);
 
   form.appendChild(input);
+
   document.body.appendChild(form);
 
   submitBtn.disabled = true;
@@ -168,27 +234,37 @@ function submitForm(){
 
   form.submit();
 
-setTimeout(function(){
+  setTimeout(function(){
 
-  document.body.innerHTML = `
-    <div style="
-      min-height:100vh;
-      background:#000;
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      font-family:sans-serif;
-      text-align:center;
-      padding:24px;
-    ">
-      <h1>受付完了</h1>
-      <p>休会届を受付しました。</p>
-    </div>
-  `;
+    document.body.innerHTML = `
+      <div style="
+        min-height:100vh;
+        background:#000;
+        color:#fff;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        flex-direction:column;
+        font-family:sans-serif;
+        text-align:center;
+      ">
+        <h1>受付完了</h1>
+        <p>休会届を受付しました。</p>
+      </div>
+    `;
 
-monthsSelect.addEventListener("change", updateDisplay);
-submitBtn.addEventListener("click", submitForm);
+  },3000);
+}
+
+monthsSelect.addEventListener(
+  "change",
+  updateDisplay
+);
+
+submitBtn.addEventListener(
+  "click",
+  submitForm
+);
+
 updateDisplay();
 </script>

@@ -192,7 +192,7 @@ function updateDisplay(){
   const months = Number(monthsSelect.value || 1);
   const total = months * PRICE_PER_MONTH;
 
-  startMonthInput.value = `${start.getFullYear()}年${start.getMonth() + 1}月`;
+  startMonthInput.value = `${start.getFullYear()}年${start.getMonth() + 1}月1日`;
 
   const end = new Date(
     start.getFullYear(),

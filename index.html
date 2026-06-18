@@ -176,6 +176,11 @@ if(!token){
 
 window.verifyTokenCallback = function(res){
 
+  const loading = document.getElementById("loadingScreen");
+  if(loading){
+    loading.remove();
+  }
+
   if(!res.success){
     showInvalid(res.message);
     return;

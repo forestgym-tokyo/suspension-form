@@ -183,7 +183,11 @@ function verifyToken(callback){
   const callbackName =
     "verifyTokenCallback_" + Date.now();
 
+  let completed = false;
+
   window[callbackName] = function(result){
+
+    completed = true;
 
     delete window[callbackName];
 
@@ -205,11 +209,15 @@ function verifyToken(callback){
     + "&token=" + encodeURIComponent(token)
     + "&callback=" + encodeURIComponent(callbackName);
 
-  script.onerror = function(){
-    showInvalid("INVALID");
-  };
-
   document.body.appendChild(script);
+
+  setTimeout(function(){
+
+    if(!completed){
+      showInvalid("INVALID");
+    }
+
+  },8000);
 }
   
 function calcStartMonth(){

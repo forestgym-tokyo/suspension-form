@@ -132,7 +132,29 @@ const exampleText = document.getElementById("exampleText");
 const endDateText = document.getElementById("endDateText");
 const submitBtn = document.getElementById("submitBtn");
 
-function showInvalid(message){
+function showInvalid(type){
+
+  let message = "";
+
+  if(type === "EXPIRED"){
+    message = `
+      このURLは有効期限切れです。<br>
+      お手数ですが、The Forest Gymへご連絡のうえ、<br>
+      新しい休会届フォームURLの送付をご依頼ください。
+    `;
+  }else if(type === "USED"){
+    message = `
+      このURLは使用済みです。<br>
+      お手数ですが、The Forest Gymへご連絡のうえ、<br>
+      新しい休会届フォームURLの送付をご依頼ください。
+    `;
+  }else{
+    message = `
+      このURLは無効です。<br>
+      お手数ですが、The Forest Gymへご連絡ください。
+    `;
+  }
+
   document.body.innerHTML = `
     <div style="
       color:white;
@@ -142,19 +164,51 @@ function showInvalid(message){
       align-items:center;
       justify-content:center;
       text-align:center;
-      font-size:22px;
+      font-size:20px;
+      line-height:1.8;
       font-family:sans-serif;
       padding:24px;
     ">
-      このURLは無効です<br>
-      ${message}
+      <div>${message}</div>
     </div>
   `;
 }
-
 if(!token){
-  showInvalid("TOKENなし");
+  showInvalid("INVALID");
   throw new Error("NO TOKEN");
+}
+function verifyToken(callback){
+
+  const callbackName =
+    "verifyTokenCallback_" + Date.now();
+
+  window[callbackName] = function(result){
+
+    delete window[callbackName];
+
+    const script =
+      document.getElementById(callbackName);
+
+    if(script){
+      script.remove();
+    }
+
+    callback(result);
+  };
+
+  const script = document.createElement("script");
+  script.id = callbackName;
+  script.src =
+    GAS_URL
+    + "?action=verifyToken"
+    + "&token=" + encodeURIComponent(token)
+    + "&callback=" + encodeURIComponent(callbackName);
+
+  script.onerror = function(){
+    showInvalid("INVALID");
+  };
+
+  document.body.appendChild(script);
 }
   
 function calcStartMonth(){
@@ -273,7 +327,28 @@ setTimeout(()=>{
 
 monthsSelect.addEventListener("change", updateDisplay);
 submitBtn.addEventListener("click", submitForm);
-updateDisplay();
+
+verifyToken(function(result){
+
+  if(!result || !result.success){
+
+    if(result && result.message === "USED"){
+      showInvalid("USED");
+      return;
+    }
+
+    if(result && result.message === "EXPIRED"){
+      showInvalid("EXPIRED");
+      return;
+    }
+
+    showInvalid("INVALID");
+    return;
+  }
+
+  updateDisplay();
+
+});
 </script>
 
 </body>

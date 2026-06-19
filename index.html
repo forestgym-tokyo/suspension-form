@@ -318,9 +318,26 @@ form.submit();
 
 setTimeout(()=>{
 
-  alert("休会届を受付しました");
-
-  location.reload();
+  document.body.innerHTML = `
+    <div style="
+      color:white;
+      background:black;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:20px;
+      line-height:1.8;
+      font-family:sans-serif;
+      padding:24px;
+    ">
+      <div>
+        休会届を受付しました。<br>
+        ご入力いただいたメールアドレス宛に受付完了メールを送信しました。
+      </div>
+    </div>
+  `;
 
 },3000);
 }

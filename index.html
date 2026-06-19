@@ -342,14 +342,16 @@ setTimeout(()=>{
 monthsSelect.addEventListener("change", updateDisplay);
 submitBtn.addEventListener("click", submitForm);
 
-verifyToken(function(result){
+if(params.get("ok") === "1"){
 
-  if(!result || !result.success){
+  formContainer.style.display = "block";
+  updateDisplay();
 
-    if(result && result.message === "USED"){
-      showInvalid("USED");
-      return;
-    }
+}else{
+
+  showInvalid("INVALID");
+
+}
 
     if(result && result.message === "EXPIRED"){
       showInvalid("EXPIRED");

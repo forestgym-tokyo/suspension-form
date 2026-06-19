@@ -131,6 +131,7 @@ const priceDetail = document.getElementById("priceDetail");
 const exampleText = document.getElementById("exampleText");
 const endDateText = document.getElementById("endDateText");
 const submitBtn = document.getElementById("submitBtn");
+const formContainer = document.getElementById("formContainer");
 
 function showInvalid(type){
 
@@ -363,6 +364,7 @@ verifyToken(function(result){
     return;
   }
 
+  formContainer.style.display = "block";
   updateDisplay();
 
 });

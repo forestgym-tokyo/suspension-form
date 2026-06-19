@@ -180,31 +180,32 @@ if(!token){
 }
 function verifyToken(callback){
 
-  function receiveMessage(event){
+  const callbackName =
+    "verifyTokenCallback_" + Date.now();
 
-    window.removeEventListener("message", receiveMessage);
+  window[callbackName] = function(result){
 
-    const iframe =
-      document.getElementById("verifyTokenFrame");
+    delete window[callbackName];
 
-    if(iframe){
-      iframe.remove();
+    const script =
+      document.getElementById(callbackName);
+
+    if(script){
+      script.remove();
     }
 
-    callback(event.data);
-  }
+    callback(result);
+  };
 
-  window.addEventListener("message", receiveMessage);
-
-  const iframe = document.createElement("iframe");
-  iframe.id = "verifyTokenFrame";
-  iframe.style.display = "none";
-  iframe.src =
+  const script = document.createElement("script");
+  script.id = callbackName;
+  script.src =
     GAS_URL
-    + "?action=verifyTokenFrame"
-    + "&token=" + encodeURIComponent(token);
+    + "?action=verifyToken"
+    + "&token=" + encodeURIComponent(token)
+    + "&callback=" + encodeURIComponent(callbackName);
 
-  document.body.appendChild(iframe);
+  document.body.appendChild(script);
 }
   
 function calcStartMonth(){

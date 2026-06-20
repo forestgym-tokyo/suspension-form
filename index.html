@@ -278,16 +278,16 @@ function submitForm(){
     return;
   }
 
- const payload = {
-  token,
-  memberNo,
-  name,
-  email,
-  startMonth: startMonthInput.value,
-  months: monthsSelect.value,
-  endDate: endDateText.innerText,
-  price: priceEl.innerText.replace("円","")
-};
+  const payload = {
+    token,
+    memberNo,
+    name,
+    email,
+    startMonth: startMonthInput.value,
+    months: monthsSelect.value,
+    endDate: endDateText.innerText,
+    price: priceEl.innerText.replace("円","")
+  };
 
   const iframe = document.createElement("iframe");
   iframe.name = "hidden_iframe_" + Date.now();
@@ -305,54 +305,44 @@ function submitForm(){
   input.name = "payload";
   input.value = JSON.stringify(payload);
 
-form.appendChild(input);
-document.body.appendChild(form);
+  form.appendChild(input);
+  document.body.appendChild(form);
 
-submitBtn.disabled = true;
-submitBtn.innerText = "送信中...";
+  submitBtn.disabled = true;
+  submitBtn.innerText = "送信中...";
 
-form.submit();
+  form.submit();
 
-setTimeout(()=>{
+  setTimeout(()=>{
 
-  document.body.innerHTML = `
-    <div style="
-      color:white;
-      background:black;
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      font-size:20px;
-      line-height:1.8;
-      font-family:sans-serif;
-      padding:24px;
-    ">
-      <div>
-        休会届を受付しました。<br>
-        ご入力いただいたメールアドレス宛に受付完了メールを送信しました。
+    document.body.innerHTML = `
+      <div style="
+        color:white;
+        background:black;
+        min-height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        font-size:20px;
+        line-height:1.8;
+        font-family:sans-serif;
+        padding:24px;
+      ">
+        <div>
+          休会届を受付しました。<br>
+          ご入力いただいたメールアドレス宛に受付完了メールを送信しました。
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-},3000);
+  },3000);
 }
 
 monthsSelect.addEventListener("change", updateDisplay);
 submitBtn.addEventListener("click", submitForm);
 
-if(params.get("ok") === "1"){
-
-  formContainer.style.display = "block";
-  updateDisplay();
-
-}else{
-
-  showInvalid("INVALID");
-
-}
-
+updateDisplay();
 
 </script>
 

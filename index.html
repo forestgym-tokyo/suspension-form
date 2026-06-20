@@ -178,35 +178,6 @@ if(!token){
   showInvalid("INVALID");
   throw new Error("NO TOKEN");
 }
-function verifyToken(callback){
-
-  const callbackName =
-    "verifyTokenCallback_" + Date.now();
-
-  window[callbackName] = function(result){
-
-    delete window[callbackName];
-
-    const script =
-      document.getElementById(callbackName);
-
-    if(script){
-      script.remove();
-    }
-
-    callback(result);
-  };
-
-  const script = document.createElement("script");
-  script.id = callbackName;
-  script.src =
-    GAS_URL
-    + "?action=verifyToken"
-    + "&token=" + encodeURIComponent(token)
-    + "&callback=" + encodeURIComponent(callbackName);
-
-  document.body.appendChild(script);
-}
   
 function calcStartMonth(){
   const now = new Date();

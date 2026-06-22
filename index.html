@@ -313,7 +313,16 @@ function submitForm(){
 monthsSelect.addEventListener("change", updateDisplay);
 submitBtn.addEventListener("click", submitForm);
 
-updateDisplay();
+if(params.get("ok") === "1"){
+
+  formContainer.style.display = "block";
+  updateDisplay();
+
+}else{
+
+  showInvalid("INVALID");
+
+}
 
 </script>
 

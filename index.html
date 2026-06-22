@@ -186,13 +186,16 @@ function calcStartMonth(){
 
   return new Date(y, m + 2, 1);
 }
-
+function formatDateJa(date){
+  return `${date.getFullYear()}年${date.getMonth() + 1}月1日`;
+}
+  
 function updateDisplay(){
   const start = calcStartMonth();
   const months = Number(monthsSelect.value || 1);
   const total = months * PRICE_PER_MONTH;
 
-  startMonthInput.value = `${start.getFullYear()}年${start.getMonth() + 1}月1日`;
+ startMonthInput.value = formatDateJa(start);
 
   const end = new Date(
     start.getFullYear(),
@@ -223,7 +226,24 @@ function submitForm(){
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const agree = document.getElementById("agree").checked;
+  const latestStartMonth = formatDateJa(calcStartMonth());
 
+  if(startMonthInput.value !== latestStartMonth){
+
+    alert(
+      "休会開始月が変更になりました。\n\n" +
+      "現在の休会開始は「" + latestStartMonth + "」です。\n\n" +
+      "休会期間をあらためて選択し、内容をご確認のうえ再度送信してください。"
+    );
+
+    startMonthInput.value = latestStartMonth;
+    updateDisplay();
+
+    submitBtn.disabled = false;
+    submitBtn.innerText = "休会届を送信する";
+
+    return;
+  }
   if(!memberNo || !name || !email){
     alert("必須項目を入力してください");
     return;

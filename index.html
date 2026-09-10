@@ -265,7 +265,13 @@ function submitForm(){
     return;
   }
 
+ const requestId =
+  (window.crypto && typeof window.crypto.randomUUID === "function")
+  ? window.crypto.randomUUID()
+  : Date.now() + "-" + Math.random().toString(36).slice(2);
+
  const payload = {
+  requestId,
   token,
   memberNo,
   name,
@@ -298,15 +304,63 @@ document.body.appendChild(form);
 submitBtn.disabled = true;
 submitBtn.innerText = "送信中...";
 
-form.submit();
+  const timeoutId = setTimeout(()=>{
+    window.removeEventListener("message", handleResult);
+    form.remove();
+    iframe.remove();
+    submitBtn.disabled = false;
+    submitBtn.innerText = "休会届を送信する";
+    alert("送信結果を確認できませんでした。時間をおいて再度お試しください。");
+  },15000);
 
-setTimeout(()=>{
+  function handleResult(event){
+    let sourceUrl;
 
-  alert("休会届を受付しました");
+    try{
+      sourceUrl = new URL(event.origin);
+    }catch(_error){
+      return;
+    }
 
-  location.reload();
+    const isAppsScriptOrigin =
+      sourceUrl.protocol === "https:" &&
+      (
+        sourceUrl.hostname === "script.google.com" ||
+        sourceUrl.hostname === "script.googleusercontent.com" ||
+        sourceUrl.hostname.endsWith(".googleusercontent.com")
+      );
 
-},3000);
+    if(!isAppsScriptOrigin){
+      return;
+    }
+
+    const result = event.data;
+    if(
+      !result ||
+      typeof result.success !== "boolean" ||
+      result.requestId !== requestId
+    ){
+      return;
+    }
+
+    window.removeEventListener("message", handleResult);
+    clearTimeout(timeoutId);
+    form.remove();
+    iframe.remove();
+
+    if(result.success){
+      alert("休会届を受付しました");
+      location.reload();
+      return;
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.innerText = "休会届を送信する";
+    alert(result.message || "休会申請を受け付けできませんでした。");
+  }
+
+  window.addEventListener("message", handleResult);
+  form.submit();
 }
 
 monthsSelect.addEventListener("change", updateDisplay);

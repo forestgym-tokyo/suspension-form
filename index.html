@@ -354,9 +354,8 @@ submitBtn.innerText = "送信中...";
       return;
     }
 
-    submitBtn.disabled = false;
-    submitBtn.innerText = "休会届を送信する";
     alert(result.message || "休会申請を受け付けできませんでした。");
+    location.reload();
   }
 
   window.addEventListener("message", handleResult);
